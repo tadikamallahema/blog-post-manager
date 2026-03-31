@@ -1,0 +1,9 @@
+/**
+ createPost
+getAllPosts
+getPublishedPosts
+getPostById
+updatePost
+deletePost
+togglePostStatus
+ */
