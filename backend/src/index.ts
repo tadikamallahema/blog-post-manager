@@ -4,6 +4,7 @@ import db from './config/db';
 import createUserTable from './models/UserModel';
 import createBlogTable from './models/BlogModel';
 import authRoutes from './routes/authRoutes';
+import postRoutes from './routes/postRoutes';
 
 
 dotenv.config();
@@ -23,6 +24,7 @@ db.getConnection().then(
 createUserTable();
 createBlogTable();
 app.use('/api/auth',authRoutes);
+app.use('/api/blog',postRoutes);
 
 app.listen(port,()=>{
     console.log(`Server is running on port: ${port}`);

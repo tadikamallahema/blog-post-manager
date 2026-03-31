@@ -13,7 +13,7 @@ type createBlog={
 
 export async function insertBlog(data:createBlog):Promise<ResultSetHeader>{
     const {title,content,author_id,category,image}=data;
-    const status="draft";
+    const { status = "draft" } = data;
     const [res]=await db.execute<ResultSetHeader>(
         `insert into blogs(title,content,author_id,category,status,image)
         values(?,?,?,?,?,?)`,[title,content,author_id,category,status,image]
