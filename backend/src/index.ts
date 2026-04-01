@@ -8,6 +8,7 @@ import authRoutes from './routes/authRoutes';
 import postRoutes from './routes/postRoutes';
 import cookieParser from 'cookie-parser';
 import sadminRoute from './routes/adminRoute';
+import { refreshAccessToken } from './middleware/authMiddleware';
 //import { seedSuperAdmin } from './controllers/adminController';
 
 
@@ -37,6 +38,7 @@ createBlogTable();
 app.use('/api/auth',authRoutes);
 app.use('/api/blog', postRoutes);
 app.use('/api/sadmin',sadminRoute);
+app.use('/api/refresh',refreshAccessToken);
 app.listen(port,()=>{
     console.log(`Server is running on port: ${port}`);
 })

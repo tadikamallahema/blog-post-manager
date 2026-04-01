@@ -57,7 +57,9 @@ export async function login(req:Request,res:Response){
             sameSite:"lax",
             maxAge:24*60*60*1000    //1 day
         })
-        return res.status(200).json({success:true,message:"User Logged in Successfull"})
+        return res.status(200).json({success:true,message:"User Logged in Successfull",user:{name:existingUser.name,
+            email:existingUser.email,phoneNumber:existingUser.phoneNumber,role:existingUser.role,is_active:existingUser.is_active
+        }})
     }catch(err:any){
         return res.status(500).json({success:false,message:err.message});
     }

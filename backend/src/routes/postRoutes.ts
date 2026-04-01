@@ -1,10 +1,11 @@
 import express from 'express';
 import { createPost, deletePost, getAllCategories, getAllPost, getAllPublishedPosts, getPostsByCategory, getPostsById, togglePostStatus, updatePostById } from '../controllers/blogController';
+import { verifyToken } from '../middleware/authMiddleware';
 
 const postRoutes=express.Router();
 
 
-postRoutes.post('/create',createPost);
+postRoutes.post('/create',verifyToken,createPost);
 postRoutes.get('/published',getAllPublishedPosts);
 postRoutes.get('/post/:id',getPostsById);
 postRoutes.put('/:id',updatePostById);

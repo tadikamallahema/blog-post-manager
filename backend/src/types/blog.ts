@@ -5,7 +5,7 @@ export default interface Blog{
     author_id:number;
     category:string;
     status:"draft"|"published";
-    image:string|null;
+    image?:string|null;
     created_at:Date;
     updated_at:Date;
 }

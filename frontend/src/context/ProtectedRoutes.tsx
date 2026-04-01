@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState, type ReactNode } from "react";
 import { Navigate } from "react-router-dom";
-
+import { useAuth } from "./AuthContext";
 interface ProtectedProps {
   children: ReactNode;
   allowedRoles: string[];
@@ -10,75 +10,37 @@ interface ProtectedProps {
 const ProtectedRoutes = ({ children, allowedRoles }: ProtectedProps) => {
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const { setAuth } = useAuth();
 
   useEffect(() => {
-
     const checkAuth = async () => {
-
       try {
-
         const res = await axios.get(
-          "http://localhost:2007/api/check",
+          "http://localhost:5009/api/auth/me",
           { withCredentials: true }
         );
 
-        const role = res.data.role;
+        const userData = res.data;
 
-        if (allowedRoles.includes(role)) {
+        setAuth(userData); // 🔥 store globally
+
+        if (allowedRoles.includes(userData.role)) {
           setIsAuthenticated(true);
         } else {
-          alert("You are not authorized to access this page");
+           alert("Only admin is authorized to access this page");
           setIsAuthenticated(false);
         }
 
-      } catch (err: any) {
-
-        const status = err?.response?.status;
-
-        if (status === 401) {
-
-          try {
-
-            // call refresh token API
-            await axios.post(
-              "http://localhost:2007/api/refresh",
-              {},
-              { withCredentials: true }
-            );
-
-            // retry check after refreshing token
-            const retry = await axios.get(
-              "http://localhost:2007/api/check",
-              { withCredentials: true }
-            );
-
-            const role = retry.data.role;
-
-            if (allowedRoles.includes(role)) {
-              setIsAuthenticated(true);
-            } else {
-              alert("You are not authorized");
-              setIsAuthenticated(false);
-            }
-
-          } catch {
-            setIsAuthenticated(false);
-          }
-
-        } else {
-          setIsAuthenticated(false);
-        }
-
+      } catch {
+        setIsAuthenticated(false);
       }
-
     };
 
     checkAuth();
-
   }, []);
 
   if (isAuthenticated === null) {
-    return <div>Loading... Checking authentication</div>;
+    return <div>Loading...</div>;
   }
 
   if (!isAuthenticated) {
@@ -87,5 +49,4 @@ const ProtectedRoutes = ({ children, allowedRoles }: ProtectedProps) => {
 
   return <>{children}</>;
 };
-
 export default ProtectedRoutes;

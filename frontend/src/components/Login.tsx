@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import API from "../services/api";
-import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../styles/Auth.css";
 
@@ -10,24 +10,22 @@ const Login = () => {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
   const { setAuth } = useAuth();
-  const redirectTo =
-    (location.state as { from?: { pathname?: string } } | null)?.from
-      ?.pathname || "/dashboard";
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
       const res = await API.post("/auth/login", { email, password });
-      
-      if (res.data.success && res.data.token && res.data.user) {
-        setAuth(res.data.token, res.data.user);
+      console.log(res.data);
+      if (res.data.success /* && res.data.token */ && res.data.user) {
+
+        setAuth(res.data.token, res.data.data);
         setMessage("");
         setEmail("");
         setPassword("");
-        navigate(redirectTo, { replace: true });
+        navigate('/dashboard');
       } else {
         setMessage(res.data.message || "Login failed");
       }

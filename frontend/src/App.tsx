@@ -7,6 +7,7 @@ import Signup from "./components/Signup";
 import SuperAdminPanel from "./components/SuperAdminPanel";
 import WritePost from "./components/WritePost";
 import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoutes from "./context/ProtectedRoutes";
 
 function App() {
   return (
@@ -19,12 +20,20 @@ function App() {
 
           <Route
             path="/dashboard"
-            element={<Dashboard />}
+            element={
+              <ProtectedRoutes allowedRoles={["admin"]}>
+                <Dashboard />
+              </ProtectedRoutes>
+            }
           />
 
           <Route
             path="/admin"
-            element={<AdminPanel />}
+            element={
+            <ProtectedRoutes allowedRoles={["admin"]}>
+            <AdminPanel />
+            </ProtectedRoutes>
+          }
           />
           <Route
             path="/write"

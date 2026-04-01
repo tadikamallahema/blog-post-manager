@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import API from "../services/api";
 import Navbar from "./Navbar";
 import "../styles/WritePost.css";
+import { useAuth } from "../context/AuthContext";
 
 interface PostForm {
   title: string;
@@ -20,7 +21,8 @@ const WritePost: React.FC = () => {
     category: "Tech",
     status: "draft"
   });
-  //const { user } = useAuth();
+  const { user } = useAuth();
+ 
   const [categories, setCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -65,6 +67,7 @@ const WritePost: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     try {
+      
       if (!form.title || !form.content || !form.category) {
         setMessage("All fields are required");
         return;
@@ -74,14 +77,18 @@ const WritePost: React.FC = () => {
         await API.put(`/blog/${id}`, {
           title: form.title,
           content: form.content,
+          author_id:user?.id,
           category: form.category,
           status: form.status,
         });
         setMessage("Post updated successfully");
       } else {
+        console.log(user?.id,"hhh")
+         
         await API.post("/blog/create", {
           title: form.title,
           content: form.content,
+          author_id:user?.id,
           category: form.category,
           status: form.status,
         });

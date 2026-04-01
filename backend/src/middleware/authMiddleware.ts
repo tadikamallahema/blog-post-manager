@@ -6,13 +6,13 @@ import { Role } from "../types/role";
 
 export const verifyToken = async(req: Request, res: Response, next: NextFunction) => {
   const token = req.cookies?.token;
-  console.log(token);
+  //console.log(token);
   if (!token) {
     return res.status(401).json({ message: "No token" });
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
-     const user = await getUserById(decoded.id);
+     /* const user = await getUserById(decoded.id);
 
     if (!user) {
       return res.status(401).json({ message: "User not found" });
@@ -20,10 +20,10 @@ export const verifyToken = async(req: Request, res: Response, next: NextFunction
 
     if (!user.is_active) {
       return res.status(403).json({ message: "Account is deactivated" });
-    }
+    } */
     (req as any).user = {
-      id: user.id,
-      role: user.role as Role,
+      id: decoded.id,
+      role: decoded.role as Role,
     };
     next();
   } catch (err) {

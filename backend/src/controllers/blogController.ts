@@ -4,14 +4,15 @@ import { allBlogs, deleteBlog, getAllCat, getBlogByCategory, getPostById, getPub
 
 export const createPost=async(req:Request,res:Response)=>{
     try{
-        const {title,content,author_id,category,status,image}:Blog=req.body;
-        //const author_id=req.user!.id;
+        const {title,content,category,status,image="null"}:Blog=req.body;
+        const author_id = (req as any).user?.id;
         if(!title || !content || !category||!status){
             return res.status(400).json({success:false,message:"All details are required"})
         }
         const newpost=await insertBlog({title,content,author_id,category,status,image})
         return res.status(201).json({success:true,message:"Post created Successfully",newpost})
     }catch(err:any){
+        //console.log(err);
         return res.status(500).json({success:false,message:err.message});
     }
 }
@@ -55,7 +56,7 @@ export async function updatePostById(req:Request,res:Response){
         if (isNaN(post_id)) {
             return res.status(400).json({success: false,message: "Invalid ID"});
         }
-        const {title,content,category,status,image}=req.body;
+        const {title,content,category,status,image="null"}=req.body;
         const updatedpost=await updatePost(post_id,{title,content,category,status,image});
         return res.status(200).json({success:true,message:"Updated post successfully",updatedpost});
     }catch(err:any){
@@ -97,10 +98,10 @@ export async function getPostsByCategory(req:Request,res:Response){
         }
         const cat=String(category);
         const posts=await getBlogByCategory(cat);
-        console.log(posts);
-        /* if(posts.length==0){
+        //console.log(posts);
+         if(posts.length==0){
                 return res.status(404).json({success:false,message:"No post is found in this category"});
-        } */
+        } 
         return res.status(200).json({success:true,message:`Posts of category:${cat}`,posts})
     }catch(err:any){
         return res.status(500).json({success:false,message:err.message});

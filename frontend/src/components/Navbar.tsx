@@ -11,6 +11,7 @@ const Navbar: React.FC = () => {
   const handleLogout = async () => {
     try {
       await API.post("/auth/logout");
+      navigate("/");
     } catch (err) {
       console.error("Logout error:", err);
     } finally {
