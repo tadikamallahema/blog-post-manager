@@ -10,7 +10,7 @@ declare global {
     }
   }
 }
-
+export {};
 /*
 modifying the global types 
 targetting express typing and requuest interfaces 

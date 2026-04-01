@@ -98,7 +98,7 @@ export const getBlogByCategory=async(category:string):Promise<RowDataPacket[]>=>
 }
 export const getAllCat=async():Promise<RowDataPacket[]>=>{
     const [res]=await db.execute<RowDataPacket[]>(
-        `select category from blogs`
+        `select distinct category from blogs`
     );
     return res;
 }
