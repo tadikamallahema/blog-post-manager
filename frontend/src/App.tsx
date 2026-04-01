@@ -1,24 +1,58 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import PrivateRoute from "./components/PrivateRoute";
 import Login from "./components/Login";
-import Signup from "./components/Signup";
 import Dashboard from "./pages/Dashboard";
 import BlogList from "./pages/Blog";
 import CreateBlog from "./pages/createBlog";
 import AdminDashboard from "./pages/AdminDashboard";
-
+import EditBlog from "./pages/EditBlog";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<BlogList />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/create-blog" element={<CreateBlog/>}/>
-        <Route path="/admin" element={<AdminDashboard/>}/>
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Public routes */}
+          <Route path="/" element={<BlogList />} />
+          <Route path="/login" element={<Login />} />
+
+          {/* Protected routes */}
+          <Route
+            path="/admin"
+            element={
+              
+                <AdminDashboard />
+              
+            }
+          />
+          <Route
+            path="/create-blog"
+            element={
+              
+                <CreateBlog />
+              
+            }
+          />
+          <Route
+            path="/edit-blog/:id"
+            element={
+              
+                <EditBlog />
+              
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              
+                <Dashboard />
+              
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

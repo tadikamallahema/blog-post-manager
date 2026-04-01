@@ -6,6 +6,7 @@ import createUserTable from './models/UserModel';
 import createBlogTable from './models/BlogModel';
 import authRoutes from './routes/authRoutes';
 import postRoutes from './routes/postRoutes';
+
 import cookieParser from 'cookie-parser';
 //import { seedSuperAdmin } from './controllers/adminController';
 
@@ -15,7 +16,7 @@ dotenv.config();
 const app=express();
 app.use(cookieParser());     //reads cookies from incoming HTTP requests for req.cookies
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:3000'],
+    origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5176', 'http://localhost:5177', 'http://localhost:5178', 'http://localhost:5179', 'http://localhost:3000'],
     credentials: true,
 }));
 app.use(express.json());
@@ -34,7 +35,10 @@ db.getConnection().then(
 createUserTable();
 createBlogTable();
 app.use('/api/auth',authRoutes);
-app.use('/api/blog',postRoutes);
+
+
+// Protected blog routes (auth required)
+app.use('/api/blog', postRoutes);
 
 app.listen(port,()=>{
     console.log(`Server is running on port: ${port}`);
