@@ -1,30 +1,39 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
-import "../styles/Login.css"; 
+import { useAuth } from "../context/AuthContext";
+import "../styles/Login.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { refetch } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
     try {
       const res = await API.post("/auth/login", { email, password });
-      if (res.data.success) {
-        alert("Login successful!");
+      console.log(res.data);
+      /* if (res.data.success) {
+        await refetch(); // populate AuthContext from /auth/me
         navigate("/admin");
-      }
+      } */
     } catch (err: any) {
-      console.error(err.response?.data || err);
-      alert(err.response?.data?.message || "Login failed");
+      setError(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="container">
-      <h2>Login</h2>
+      <h2>Admin Login</h2>
+      {error && <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>}
       <form onSubmit={handleLogin}>
         <input
           type="email"
@@ -33,7 +42,6 @@ const Login = () => {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-
         <input
           type="password"
           placeholder="Password"
@@ -41,8 +49,9 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
       </form>
     </div>
   );

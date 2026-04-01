@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
+import Navbar from "../components/Navbar";
 import "../styles/AdminDashboard.css";
 
 type Blog = {
@@ -13,14 +14,22 @@ type Blog = {
 
 const AdminDashboard = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const fetchBlogs = async () => {
     try {
-      const res = await API.get("/blog");
-      setBlogs(res.data.posts);
-    } catch (err) {
-      console.error(err);
+      const res = await API.get("/blog/getall");
+      if (res.data.success) {
+        setBlogs(res.data.posts);
+      } else {
+        setError("Failed to load blogs");
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -29,59 +38,65 @@ const AdminDashboard = () => {
   }, []);
 
   const handleDelete = async (id: number) => {
+    if (!confirm("Delete this post?")) return;
     try {
-      await API.delete(`/blog/${id}`);
+      await API.delete(`/blog/post/${id}`);
       fetchBlogs();
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      alert(err.response?.data?.message || "Delete failed");
     }
   };
 
   const handleToggle = async (id: number) => {
     try {
-      await API.put(`/blog/${id}/toggle`);
+      await API.put(`/blog/post/${id}/toggle`);
       fetchBlogs();
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      alert(err.response?.data?.message || "Toggle failed");
     }
   };
 
   return (
-    <div className="dashboard">
-      <h2 className="heading">Admin Dashboard</h2>
-
-      <button
-        className="create-btn"
-        onClick={() => navigate("/create-blog")}
-      >
-        CREATE BLOG
-      </button>
-
-      {blogs.map((blog) => (
-        <div key={blog.id} className="blog-card">
-          <h3>{blog.title}</h3>
-          <p>{blog.content}</p>
-          <p>Category: {blog.category}</p>
-          <p>Status: {blog.status}</p>
-
-          <div className="btn-group">
-            <button
-              className="delete-btn"
-              onClick={() => handleDelete(blog.id)}
-            >
-              Delete
-            </button>
-
-            <button
-              className="toggle-btn"
-              onClick={() => handleToggle(blog.id)}
-            >
-              Toggle
-            </button>
-          </div>
+    <>
+      <Navbar />
+      <div className="dashboard">
+        <div className="dashboard-header">
+          <h2 className="heading">All Blog Posts</h2>
+          <button className="create-btn" onClick={() => navigate("/create-blog")}>
+            + Create Post
+          </button>
         </div>
-      ))}
-    </div>
+
+        {loading && <p>Loading blogs...</p>}
+        {error && <p className="error">{error}</p>}
+        {!loading && blogs.length === 0 && <p>No posts yet. Create your first one!</p>}
+
+        <div className="blog-grid">
+          {blogs.map((blog) => (
+            <div key={blog.id} className="blog-card">
+              <div className="card-header">
+                <span className={`status-badge ${blog.status}`}>{blog.status}</span>
+                <span className="category-tag">{blog.category}</span>
+              </div>
+              <h3>{blog.title}</h3>
+              <p className="card-content">{blog.content.substring(0, 120)}...</p>
+
+              <div className="btn-group">
+                <button className="edit-btn" onClick={() => navigate(`/edit-blog/${blog.id}`)}>
+                  Edit
+                </button>
+                <button className="toggle-btn" onClick={() => handleToggle(blog.id)}>
+                  {blog.status === "draft" ? "Publish" : "Unpublish"}
+                </button>
+                <button className="delete-btn" onClick={() => handleDelete(blog.id)}>
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 };
 
