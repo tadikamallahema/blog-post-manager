@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import db from './config/db';
 import createUserTable from './models/UserModel';
 import createBlogTable from './models/BlogModel';
@@ -9,6 +10,10 @@ import postRoutes from './routes/postRoutes';
 
 dotenv.config();
 const app=express();
+app.use(cors({
+    origin: 'http://localhost:5175',
+    credentials: true,
+}));
 app.use(express.json());
 const port:number=5009;
 
