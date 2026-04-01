@@ -6,8 +6,8 @@ import createUserTable from './models/UserModel';
 import createBlogTable from './models/BlogModel';
 import authRoutes from './routes/authRoutes';
 import postRoutes from './routes/postRoutes';
-
 import cookieParser from 'cookie-parser';
+import sadminRoute from './routes/adminRoute';
 //import { seedSuperAdmin } from './controllers/adminController';
 
 
@@ -35,11 +35,8 @@ db.getConnection().then(
 createUserTable();
 createBlogTable();
 app.use('/api/auth',authRoutes);
-
-
-// Protected blog routes (auth required)
 app.use('/api/blog', postRoutes);
-
+app.use('/api/sadmin',sadminRoute);
 app.listen(port,()=>{
     console.log(`Server is running on port: ${port}`);
 })

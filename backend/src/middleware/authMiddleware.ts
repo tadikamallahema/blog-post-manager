@@ -1,18 +1,29 @@
 import {  Response, NextFunction, Request } from "express";
 import jwt from "jsonwebtoken";
+import { getUserById } from "../servicer/user.servicer";
+import { Role } from "../types/role";
 //import { AuthRequest } from "../types/auth";
 
-export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.cookies?.token||req.headers.authorization?.split(" ")[1];;
-
+export const verifyToken = async(req: Request, res: Response, next: NextFunction) => {
+  const token = req.cookies?.token;
+  console.log(token);
   if (!token) {
     return res.status(401).json({ message: "No token" });
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
+     const user = await getUserById(decoded.id);
+
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    if (!user.is_active) {
+      return res.status(403).json({ message: "Account is deactivated" });
+    }
     (req as any).user = {
-      id: decoded.id,
-      role: decoded.role,
+      id: user.id,
+      role: user.role as Role,
     };
     next();
   } catch (err) {
@@ -27,8 +38,8 @@ export const refreshAccessToken=(req: Request,res:Response,)=>{
   }
   try{
     const decode=jwt.verify(refreshToken, process.env.JWT_SECRET_REFRESH!) as any;
-    const newAccessToken=jwt.sign({id:decode.id,role:decode.role},process.env.JWT_SECRET_REFRESH!,{expiresIn:'15m'});
-    res.cookie("refreshToken",newAccessToken,{
+    const newAccessToken=jwt.sign({id:decode.id,role:decode.role},process.env.JWT_SECRET!,{expiresIn:'15m'});
+    res.cookie("token",newAccessToken,{
       httpOnly:true,
       secure:false,
       sameSite:"lax",
