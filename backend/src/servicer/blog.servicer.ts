@@ -90,3 +90,15 @@ export async function updatePost(
   const [res] = await db.execute<ResultSetHeader>(query, values);
   return res;
 }
+export const getBlogByCategory=async(category:string):Promise<RowDataPacket[]>=>{
+    const [res]=await db.execute<RowDataPacket[]>(
+        `select * from blogs where lower(category)=lower(?) and status='published'`,[category]
+    );
+    return res;
+}
+export const getAllCat=async():Promise<RowDataPacket[]>=>{
+    const [res]=await db.execute<RowDataPacket[]>(
+        `select distinct category from blogs`
+    );
+    return res;
+}

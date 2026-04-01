@@ -1,14 +1,16 @@
 import express from 'express';
-import { createPost, deletePost, getAllPost, getAllPublishedPosts, getPostsById, togglePostStatus, updatePostById } from '../controllers/blogController';
+import { createPost, deletePost, getAllCategories, getAllPost, getAllPublishedPosts, getPostsByCategory, getPostsById, togglePostStatus, updatePostById } from '../controllers/blogController';
 
 const postRoutes=express.Router();
 
 
 postRoutes.post('/create',createPost);
 postRoutes.get('/published',getAllPublishedPosts);
-postRoutes.get('/:id',getPostsById);
+postRoutes.get('/post/:id',getPostsById);
 postRoutes.put('/:id',updatePostById);
-postRoutes.get('/',getAllPost);
-postRoutes.delete('/:id',deletePost);
-postRoutes.put('/:id/toggle',togglePostStatus);
+postRoutes.get('/getall',getAllPost);
+postRoutes.delete('/post/:id',deletePost);
+postRoutes.put('/post/:id/toggle',togglePostStatus);
+postRoutes.get('/allc',getAllCategories);
+postRoutes.get('/postbycat',getPostsByCategory);
 export default postRoutes;
