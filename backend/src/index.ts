@@ -6,11 +6,14 @@ import createUserTable from './models/UserModel';
 import createBlogTable from './models/BlogModel';
 import authRoutes from './routes/authRoutes';
 import postRoutes from './routes/postRoutes';
+import cookieParser from 'cookie-parser';
+//import { seedSuperAdmin } from './controllers/adminController';
 
 
 dotenv.config();
 
 const app=express();
+app.use(cookieParser());     //reads cookies from incoming HTTP requests for req.cookies
 app.use(cors({
     origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:3000'],
     credentials: true,
@@ -27,6 +30,7 @@ db.getConnection().then(
         process.exit(1);
     })
 
+//seedSuperAdmin();
 createUserTable();
 createBlogTable();
 app.use('/api/auth',authRoutes);

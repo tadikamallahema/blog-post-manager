@@ -19,7 +19,7 @@ const CreateBlog = () => {
         content,
         category,
         status,
-        author_id: user.id || 1,
+        author_id: user.id || 2,
         image: null,
       });
 
