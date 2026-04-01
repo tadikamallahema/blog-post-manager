@@ -18,9 +18,9 @@ type CreateUserInput = {
 };
 
 export const insertUser=async(data:CreateUserInput):Promise<ResultSetHeader>=>{
-    const {name,email,phoneNumber,role="user",password}=data;
+    const {name,email,phoneNumber,role="user",password,is_active="true"}=data;
     const [result]=await db.execute<ResultSetHeader>(
-        `insert into users(name,email,phoneNumber,role,password) values(?,?,?,?,?)`,
+        `insert into users(name,email,phoneNumber,role,password,is_active) values(?,?,?,?,?,?)`,
         [name,email,phoneNumber,role,password]
     );
     return result;

@@ -10,7 +10,7 @@ dotenv.config();
 
 export const registerUser=async(req:Request,res:Response)=>{
     try{
-        const {name,email,phoneNumber,password,role}:User=req.body;
+        const {name,email,phoneNumber,password,role,is_active="true"}=req.body;
         if(!name||!email||!phoneNumber|| !password){
             return res.status(400).json({success:false,message:"Few details are missing"});
         }
@@ -20,7 +20,7 @@ export const registerUser=async(req:Request,res:Response)=>{
         }
         const hashed=await bcrypt.hash(password,10);
         const user=await insertUser({
-            name,email,phoneNumber,password:hashed,role
+            name,email,phoneNumber,password:hashed,role,is_active
         })
         return res.status(201).json({success:true,message:"User Signedup successfully",user})
     }catch(err:any){
