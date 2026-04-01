@@ -1,15 +1,7 @@
-/**
- createPost-d getAllPosts
-getPublishedPosts
-getPostById
-updatePost
-deletePost
-togglePostStatus
- */
-
 import { Request, Response } from "express";
 import Blog from '../types/blog';
-import { getPublishedBlogs, insertBlog } from "../servicer/blog.servicer";
+import { allBlogs, deleteBlog, getPostById, getPublishedBlogs, insertBlog, toggleStatus, updatePost } from "../servicer/blog.servicer";
+
 export const createPost=async(req:Request,res:Response)=>{
     try{
         const {title,content,author_id,category,status,image}:Blog=req.body;
@@ -23,11 +15,76 @@ export const createPost=async(req:Request,res:Response)=>{
         return res.status(500).json({success:false,message:err.message});
     }
 }
-export const getAllPosts=async(req:Request,res:Response)=>{
+export const getAllPublishedPosts=async(req:Request,res:Response)=>{
     try{
         const posts=await getPublishedBlogs();
         return res.status(200).json({success:true,message:"All published posts are ",posts})
     }catch(err:any){
         return res.status(500).json({success:false,message:err.message});
     }
+}
+export const getAllPost=async(req:Request,res:Response)=>{
+    try{
+        const posts=await allBlogs();
+        return res.status(200).json({success:true,message:"All posts are ",posts})
+    }catch(err:any){
+        return res.status(500).json({success:false,message:err.message});
+    }
+}
+export const getPostsById=async(req:Request,res:Response)=>{
+   try{
+     const {id}=req.params;
+     if(!id){
+        return res.status(404).json({success:false,message:"No Id is found"})
+     }
+     const post_id=Number(id);
+     const post=await getPostById(post_id);
+     return res.status(200).json({success:true,message:`Post of Id ${id}is`,post});
+   }catch(err:any){
+    return res.status(500).json({success:false,message:err.message});
+   }
+
+}
+export async function updatePostById(req:Request,res:Response){
+    try{
+        const {id}=req.params;
+        if(!id){
+            return res.status(404).json({success:false,message:"No Id is found"})
+        }
+        const post_id=Number(id);
+        if (isNaN(post_id)) {
+            return res.status(400).json({success: false,message: "Invalid ID"});
+        }
+        const {title,content,category,status,image}=req.body;
+        const updatedpost=await updatePost(post_id,{title,content,category,status,image});
+        return res.status(200).json({success:true,message:"Updated post successfully",updatedpost});
+    }catch(err:any){
+    return res.status(500).json({success:false,message:err.message});
+   }
+}
+export async function deletePost(req:Request,res:Response){
+    try{
+        const {id}=req.params;
+     if(!id){
+        return res.status(404).json({success:false,message:"No Id is found"})
+     }
+     const post_id=Number(id);
+     await deleteBlog(post_id);
+     return res.status(200).json({success:true,message:"Deleted blog successfully"});
+    }catch(err:any){
+    return res.status(500).json({success:false,message:err.message});
+   }
+}
+export async function togglePostStatus(req:Request,res:Response){
+    try{
+        const {id}=req.params;
+     if(!id){
+        return res.status(404).json({success:false,message:"No Id is found"})
+     }
+     const post_id=Number(id);
+     await toggleStatus(post_id);
+     return res.status(200).json({success:true,message:"Changed status of post"})
+    }catch(err:any){
+    return res.status(500).json({success:false,message:err.message});
+   }
 }

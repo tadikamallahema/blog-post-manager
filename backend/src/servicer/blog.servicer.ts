@@ -32,6 +32,12 @@ export async function getPublishedBlogs():Promise<RowDataPacket[]>{
     )
     return res;
 }
+export async function allBlogs():Promise<RowDataPacket[]>{
+    const [res]=await db.execute<RowDataPacket[]>(
+        `select * from blogs`
+    )
+    return res;
+}
 export async function getPostById(id:number):Promise<RowDataPacket|null>{
     const [res]=await db.execute<RowDataPacket[]>(
         `select * from blogs where id=?`,[id]

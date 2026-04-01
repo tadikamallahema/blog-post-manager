@@ -1,8 +1,6 @@
 import db from '../config/db';
 
-//id, title, content , image , authorId,
-// //category(sports/film/art),status (draft /publish )
-// //, createdat, updated at 
+ 
 const createBlogTable=async()=>{
     try {
         await db.execute(

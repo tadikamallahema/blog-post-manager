@@ -1,6 +1,5 @@
 import db from '../config/db';
 
-//id , name , email , phoneNumber , role(“user”,”admin”, “super amin”) , password , status(active /not ),createdat , updatedat
 const createUserTable=async()=>{
     try{
         await db.execute(
