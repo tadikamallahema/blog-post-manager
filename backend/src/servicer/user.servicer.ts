@@ -14,6 +14,7 @@ type CreateUserInput = {
   phoneNumber: string;
   role?: "user" | "admin" | "super_admin";
   password: string;
+  is_active:boolean;
 };
 
 export const insertUser=async(data:CreateUserInput):Promise<ResultSetHeader>=>{
@@ -32,7 +33,7 @@ export const getUserById=async(id:number):Promise<RowDataPacket|null>=>{
     return res.length?res[0]:null;
 }
 
-export const updateUser = async (id: number,data: Partial<CreateUserInput>): Promise<ResultSetHeader> => {
+export const updateAdmin = async (id: number,data: Partial<CreateUserInput>): Promise<ResultSetHeader> => {
   const fields: string[] = [];
   const values: any[] = [];
 
@@ -61,15 +62,15 @@ export const updateUser = async (id: number,data: Partial<CreateUserInput>): Pro
     throw new Error("No fields to update");
   }
 
-  const query = `UPDATE users SET ${fields.join(", ")} WHERE id=?`;
+  const query = `UPDATE users SET ${fields.join(", ")} WHERE id=? and role='admin'`;
   values.push(id);
   const [res] = await db.execute<ResultSetHeader>(query, values);
   return res;
 };
 
-export const deleteUser=async(id:number):Promise<ResultSetHeader>=>{
+export const deleteAdmin=async(id:number):Promise<ResultSetHeader>=>{
     const [res]=await db.execute<ResultSetHeader>(
-        `delete  from users where id=?`,[id]
+        `delete from users where id=? and role='admin'`,[id]
     );
     return res;
 }
@@ -91,9 +92,9 @@ export const toggleUser=async(id:number):Promise<ResultSetHeader>=>{
   );
   return res;
 }
-export const getAllAdmin=async():Promise<RowDataPacket[]>=>{
+/* export const getAllAdmin=async():Promise<RowDataPacket[]>=>{
   const [res]=await db.execute<RowDataPacket[]>(
     `select * from users where role=admin`
   )
   return res;
-}
+} */

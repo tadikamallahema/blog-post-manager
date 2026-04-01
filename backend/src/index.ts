@@ -6,13 +6,15 @@ import createUserTable from './models/UserModel';
 import createBlogTable from './models/BlogModel';
 import authRoutes from './routes/authRoutes';
 import postRoutes from './routes/postRoutes';
-import { verifyToken } from './middleware/authMiddleware';
-import { getAllPublishedPosts, getAllCategories, getPostsById, getPostsByCategory } from './controllers/blogController';
+import cookieParser from 'cookie-parser';
+import sadminRoute from './routes/adminRoute';
+//import { seedSuperAdmin } from './controllers/adminController';
 
 
 dotenv.config();
 
 const app=express();
+app.use(cookieParser());     //reads cookies from incoming HTTP requests for req.cookies
 app.use(cors({
     origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5176', 'http://localhost:5177', 'http://localhost:5178', 'http://localhost:5179', 'http://localhost:3000'],
     credentials: true,
@@ -29,21 +31,12 @@ db.getConnection().then(
         process.exit(1);
     })
 
+//seedSuperAdmin();
 createUserTable();
 createBlogTable();
 app.use('/api/auth',authRoutes);
-
-// Public blog routes (no auth required)
-const publicBlogRoutes = express.Router();
-publicBlogRoutes.get('/published', getAllPublishedPosts);
-publicBlogRoutes.get('/allc', getAllCategories);
-publicBlogRoutes.get('/post/:id', getPostsById);
-publicBlogRoutes.get('/postbycat', getPostsByCategory);
-app.use('/api/blog', publicBlogRoutes);
-
-// Protected blog routes (auth required)
-app.use('/api/blog', verifyToken, postRoutes);
-
+app.use('/api/blog', postRoutes);
+app.use('/api/sadmin',sadminRoute);
 app.listen(port,()=>{
     console.log(`Server is running on port: ${port}`);
 })
