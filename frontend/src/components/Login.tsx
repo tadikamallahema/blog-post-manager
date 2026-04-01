@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
+import "../styles/Login.css"; 
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,7 +14,7 @@ const Login = () => {
       const res = await API.post("/auth/login", { email, password });
       if (res.data.success) {
         alert("Login successful!");
-        navigate("/dashboard"); // go to dashboard after login
+        navigate("/admin");
       }
     } catch (err: any) {
       console.error(err.response?.data || err);
@@ -22,7 +23,7 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <input
@@ -32,7 +33,7 @@ const Login = () => {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <br />
+
         <input
           type="password"
           placeholder="Password"
@@ -40,7 +41,7 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <br />
+
         <button type="submit">Login</button>
       </form>
     </div>

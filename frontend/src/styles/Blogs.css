@@ -1,0 +1,16 @@
+.blog-container {
+  padding: 20px;
+}
+
+.blog-item {
+  background: white;
+  margin: 15px auto;
+  padding: 15px;
+  width: 80%;
+  border-radius: 10px;
+}
+
+.blog-item img {
+  width: 200px;
+  margin-top: 10px;
+}

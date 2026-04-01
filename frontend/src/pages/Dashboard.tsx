@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import API from "../services/api"; // make sure this path points to api.ts
+import "../styles/Dashboard.css"
 
 type User = {
   id: number;
@@ -16,7 +17,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await API.get("/auth/me"); // call backend
+        const res = await API.get("/auth/me");
         setUser(res.data);
       } catch (err) {
         console.error(err);
