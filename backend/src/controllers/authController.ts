@@ -3,6 +3,10 @@ import User from '../types/user';
 import { getUserByEmail, insertUser } from "../servicer/user.servicer";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
+//console.log(process.env.JWT_SECRET_REFRESH);
 
 export const registerUser=async(req:Request,res:Response)=>{
     try{
@@ -38,14 +42,15 @@ export async function login(req:Request,res:Response){
         if(!passwordmatch){
              return res.status(400).json({ message: "Wrong password" });
         }
-        const token=jwt.sign({id:existingUser.id},"secrethelloooo",{expiresIn:'15m'});
-        const refreshToken=jwt.sign({id:existingUser.id},"secretrefresh",{expiresIn:'1d'});
+        const token=jwt.sign({id:existingUser.id,role:existingUser.role},process.env.JWT_SECRET!,{expiresIn:'15m'});
         res.cookie("token",token,{
             httpOnly:true,
             secure:false,
             sameSite:"lax",
             maxAge:15*60*1000       //15 min
         })
+        
+        const refreshToken=jwt.sign({id:existingUser.id,role:existingUser.role},process.env.JWT_SECRET_REFRESH!,{expiresIn:'1d'});
         res.cookie("refreshToken",refreshToken,{
             httpOnly:true,
             secure:false,

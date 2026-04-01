@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Blog from '../types/blog';
-import { allBlogs, deleteBlog, getPostById, getPublishedBlogs, insertBlog, toggleStatus, updatePost } from "../servicer/blog.servicer";
+import { allBlogs, deleteBlog, getBlogByCategory, getPostById, getPublishedBlogs, insertBlog, toggleStatus, updatePost } from "../servicer/blog.servicer";
 
 export const createPost=async(req:Request,res:Response)=>{
     try{
@@ -87,4 +87,21 @@ export async function togglePostStatus(req:Request,res:Response){
     }catch(err:any){
     return res.status(500).json({success:false,message:err.message});
    }
+}
+
+export async function getPostsByCategory(req:Request,res:Response){
+    try{
+        const {category}=req.query;
+        if(!category){
+            return res.status(400).json({success:false,message:"Please give category"});
+        }
+        const cat=String(category);
+        const posts=await getBlogByCategory(cat);
+        /* if(posts.length==0){
+                return res.status(404).json({success:false,message:"No post is found in this category"});
+        } */
+        return res.status(200).json({success:true,message:`Posts of category:${cat}`,posts})
+    }catch(err:any){
+        return res.status(500).json({success:false,message:err.message});
+    }
 }

@@ -11,4 +11,5 @@ postRoutes.put('/:id',updatePostById);
 postRoutes.get('/',getAllPost);
 postRoutes.delete('/:id',deletePost);
 postRoutes.put('/:id/toggle',togglePostStatus);
+
 export default postRoutes;
