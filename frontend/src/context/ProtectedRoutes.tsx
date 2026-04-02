@@ -22,7 +22,7 @@ const ProtectedRoutes = ({ children, allowedRoles }: ProtectedProps) => {
 
         const userData = res.data;
 
-        setAuth(userData); // 🔥 store globally
+        setAuth(userData); 
 
         if (allowedRoles.includes(userData.role)) {
           setIsAuthenticated(true);

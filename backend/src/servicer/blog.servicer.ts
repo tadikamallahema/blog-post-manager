@@ -28,7 +28,7 @@ export async function getBlogsByAuthorId(author_id:number):Promise<RowDataPacket
 }
 export async function getPublishedBlogs():Promise<RowDataPacket[]>{
     const [res]=await db.execute<RowDataPacket[]>(
-        `select * from blogs where status="published"`
+        `select * from blogs where status="published" order by updated_at asc`
     )
     return res;
 }
@@ -92,7 +92,21 @@ export async function updatePost(
 }
 export const getBlogByCategory=async(category:string):Promise<RowDataPacket[]>=>{
     const [res]=await db.execute<RowDataPacket[]>(
-        `select * from blogs where lower(category)=lower(?) and status='published'`,[category]
+        `select b.id,
+            b.title,
+            b.content,
+            b.category,
+            b.status,
+            b.created_at,
+            b.updated_at,
+            b.author_id,
+            u.name AS author
+         FROM blogs b
+         JOIN users u ON b.author_id = u.id
+         WHERE LOWER(b.category) = LOWER(?) 
+           AND b.status = 'published'
+        
+        `,[category]
     );
     return res;
 }
