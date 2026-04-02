@@ -30,8 +30,9 @@ const SuperAdminPanel: React.FC = () => {
 
   const fetchAdmins = async () => {
     try {
-      const res = await API.get("/users");
-      setAdmins(res.data.data || []);
+      const res = await API.get("/sadmin/all");
+      //console.log(res.data.all);
+      setAdmins(res.data.all || []);
     } catch (err) {
       console.error("Error fetching admins:", err);
     } finally {
@@ -47,7 +48,7 @@ const SuperAdminPanel: React.FC = () => {
         return;
       }
 
-      await API.post("/users", {
+      await API.post("/auth/register", {
         name: formData.name,
         email: formData.email,
         phoneNumber: formData.phoneNumber,
@@ -64,21 +65,40 @@ const SuperAdminPanel: React.FC = () => {
     }
   };
 
-  const handleToggleStatus = async (id: number) => {
+/*   const handleToggleStatus = async (id: number) => {
     try {
-      await API.patch(`/users/${id}/toggle`);
+      await API.patch(`/sadmin/toggle/${id}`);
       setMessage("Admin status toggled");
       fetchAdmins();
       setTimeout(() => setMessage(""), 3000);
     } catch (err) {
       setMessage("Error toggling status");
     }
-  };
+  }; */
+  const handleToggleStatus = async (id: number) => {
+  try {
+    // 🔥 update UI instantly
+    setAdmins((prev) =>
+      prev.map((admin) =>
+        admin.id === id
+          ? { ...admin, is_active: admin.is_active ? 0 : 1 }
+          : admin
+      )
+    );
+
+    await API.put(`/sadmin/toggle/${id}`);
+
+    setMessage("Admin status toggled");
+    setTimeout(() => setMessage(""), 3000);
+  } catch (err) {
+    setMessage("Error toggling status");
+  }
+};
 
   const handleDeleteAdmin = async (id: number) => {
     if (!window.confirm("Are you sure you want to delete this admin?")) return;
     try {
-      await API.delete(`/users/${id}`);
+      await API.delete(`/sadmin/del/${id}`);
       setMessage("Admin deleted successfully");
       fetchAdmins();
       setTimeout(() => setMessage(""), 3000);

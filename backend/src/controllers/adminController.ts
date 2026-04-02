@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import db from "../config/db";
 import { getAllAdmins } from "../servicer/sadmin.servicer";
 import User from "../types/user";
-import { deleteAdmin, getUserById, updateAdmin } from "../servicer/user.servicer";
+import { deleteAdmin, getUserById, toggleUser, updateAdmin } from "../servicer/user.servicer";
 
 export async function seedSuperAdmin() {
   const hashedPassword = await bcrypt.hash("admin123", 10);
@@ -68,4 +68,16 @@ export const deleteAdminByS=async(req:Request,res:Response)=>{
   }catch(err:any){
     return res.status(500).json({success:false,message:err.message});
   }
+}
+
+export const toggleStatusOfAdmin=async(req:Request,res:Response)=>{
+  try{
+    const {id}=req.params;
+    const superAdminId=Number(id);
+      await toggleUser(superAdminId);
+    return res.status(200).json({success:true,message:"Updated Admin Status"})
+  }catch(err:any){
+    return res.status(500).json({success:false,message:err.message});
+  }
+
 }
