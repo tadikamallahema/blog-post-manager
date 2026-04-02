@@ -32,9 +32,9 @@ const Navbar: React.FC = () => {
 
         <div className="navbar-menu">
           <div className="nav-left">
-            <Link to="/dashboard" className="nav-link">
+            {/* <Link to="/dashboard" className="nav-link">
               Dashboard
-            </Link>
+            </Link> */}
             {(user.role === "admin" || user.role === "super_admin") && (
               <>
                 <Link to="/admin" className="nav-link">

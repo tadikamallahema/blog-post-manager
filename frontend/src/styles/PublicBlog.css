@@ -7,7 +7,7 @@
 .blog-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 80px 20px;
+  padding: 40px 20px;
   text-align: center;
 }
 
@@ -146,7 +146,7 @@
   line-height: 1.6;
   margin-bottom: 16px;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

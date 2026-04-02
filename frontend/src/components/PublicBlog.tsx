@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import API from "../services/api";
 import "../styles/PublicBlog.css";
+import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 
 interface BlogPost {
@@ -23,6 +24,8 @@ const PublicBlog: React.FC = () => {
     fetchPosts();
     fetchCategories();
   }, [selectedCategory]);
+
+  const navigate = useNavigate();
 
   const fetchPosts = async () => {
     try {
@@ -54,8 +57,8 @@ const PublicBlog: React.FC = () => {
     <div className="public-blog-page">
       <header className="blog-header">
         <div className="blog-header-content">
-          <h1>📚 Our Blog</h1>
-          <p>Discover amazing stories and insights</p>
+          <h1>📝Blogs</h1>
+          <p>Explore ideas, stories, and knowledge🚀</p>
         </div>
       </header>
 
@@ -91,7 +94,8 @@ const PublicBlog: React.FC = () => {
           ) : (
             <div className="posts-grid">
               {posts.map((post) => (
-                <article key={post.id} className="post-card">
+                <article key={post.id} className="post-card" onClick={() => navigate(`/post/${post.id}`)}
+  style={{ cursor: "pointer" }}>
                   <div className="post-meta">
                     <span className="post-category">{post.category}</span>
                     <span className="post-date">

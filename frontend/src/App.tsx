@@ -1,6 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import AdminPanel from "./components/AdminPanel";
-import Dashboard from "./components/Dashboard";
+//import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
 import PublicBlog from "./components/PublicBlog";
 import Signup from "./components/Signup";
@@ -8,6 +8,7 @@ import SuperAdminPanel from "./components/SuperAdminPanel";
 import WritePost from "./components/WritePost";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoutes from "./context/ProtectedRoutes";
+import Blogpage from "./components/Blogpage";
 
 function App() {
   return (
@@ -18,14 +19,14 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/" element={<PublicBlog />} />
 
-          <Route
+          {/* <Route
             path="/dashboard"
             element={
               <ProtectedRoutes allowedRoles={["admin"]}>
                 <Dashboard />
               </ProtectedRoutes>
             }
-          />
+          /> */}
 
           <Route
             path="/admin"
@@ -46,6 +47,11 @@ function App() {
           <Route
             path="/superadmin"
             element={<SuperAdminPanel />}
+          />
+
+          <Route
+            path="/post/:id"
+            element={<Blogpage />}
           />
 
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,0 +1,105 @@
+/* Blog Page Styles */
+
+body{
+    background-color: #3b82f6;
+}
+.blogpage-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Title */
+.blogpage-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 16px;
+  line-height: 1.3;
+}
+
+/* Meta Info */
+.blogpage-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Category badge */
+.blogpage-meta span:first-child {
+  background-color: #3b82f6;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Content */
+.blogpage-content {
+  font-size: 18px;
+  line-height: 1.8;
+  color: #374151;
+  word-break: break-word;
+}
+
+/* Paragraph spacing */
+.blogpage-content p {
+  margin-bottom: 18px;
+}
+
+/* Headings inside content */
+.blogpage-content h1,
+.blogpage-content h2,
+.blogpage-content h3 {
+  margin-top: 24px;
+  margin-bottom: 12px;
+  color: #111827;
+}
+
+/* Images inside blog */
+.blogpage-content img {
+  max-width: 100%;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+/* Back Button (optional if you add) */
+.blogpage-back {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: #3b82f6;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.blogpage-back:hover {
+  color: #1d4ed8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .blogpage-container {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .blogpage-title {
+    font-size: 26px;
+  }
+
+  .blogpage-content {
+    font-size: 16px;
+  }
+}
