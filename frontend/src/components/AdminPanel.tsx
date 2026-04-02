@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import API from "../services/api";
@@ -63,9 +64,7 @@ const AdminPanel: React.FC = () => {
       <div className="admin-container">
         <div className="admin-header">
           <h1>📋 Manage Posts</h1>
-          <Link to="/write" className="btn btn-primary">
-            ➕ New Post
-          </Link>
+          <Link to="/write" className="btn btn-primary">➕ New Post</Link>
         </div>
 
         {message && <div className="message success">{message}</div>}
@@ -106,25 +105,21 @@ const AdminPanel: React.FC = () => {
                         ✏️ Edit
                       </Link>
                       <button
-                        onClick={() => handleToggleStatus(post.id)}
-                        className="btn btn-sm btn-toggle"
-                        title={`Toggle to ${post.status === "published" ? "Draft" : "Published"}`}
-                      >
+                        onClick={() => handleToggleStatus(post.id)} className="btn btn-sm btn-toggle" 
+                      title={`Toggle to ${post.status === "published" ? "Draft" : "Published"}`}>
                         {post.status === "published" ? "📄 Draft" : "✅ Publish"}
                       </button>
                       <button
-                        onClick={() => handleDelete(post.id)}
-                        className="btn btn-sm btn-delete"
-                      >
-                        🗑️ Delete
-                      </button>
+                        onClick={() => handleDelete(post.id)} className="btn btn-sm btn-delete">🗑️ Delete</button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          
         )}
+      
       </div>
     </div>
   );

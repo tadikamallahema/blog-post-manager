@@ -20,7 +20,6 @@ export const AuthProvider = ({ children }: any) => {
   );
 };
 
-// 🔥 this is useAuth
 export const useAuth = () => {
   return useContext(AuthContext);
 };

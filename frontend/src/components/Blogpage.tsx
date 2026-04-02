@@ -14,7 +14,7 @@ interface BlogPost {
 }
 
 const Blogpage: React.FC = () => {
-  const { id } = useParams(); // get post id from URL
+  const { id } = useParams(); 
   const [post, setPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
 

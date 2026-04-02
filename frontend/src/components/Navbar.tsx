@@ -15,7 +15,7 @@ const Navbar: React.FC = () => {
     } catch (err) {
       console.error("Logout error:", err);
     } finally {
-       logout() //will clear both state and localStorage
+       logout() 
       
       navigate("/login");
     }
