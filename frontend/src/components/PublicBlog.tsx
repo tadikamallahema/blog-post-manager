@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import API from "../services/api";
 import "../styles/PublicBlog.css";
+import Navbar from "./Navbar";
 
 interface BlogPost {
   id: number;
   title: string;
   content: string;
-  author: string;
+  author_id: number;
   category: string;
   status: string;
   created_at: string;
@@ -48,6 +49,8 @@ const PublicBlog: React.FC = () => {
   };
 
   return (
+    <div>
+      <Navbar/>
     <div className="public-blog-page">
       <header className="blog-header">
         <div className="blog-header-content">
@@ -100,7 +103,7 @@ const PublicBlog: React.FC = () => {
                     {post.content.substring(0, 150)}...
                   </p>
                   <div className="post-footer">
-                    <span className="post-author">By {post.author}</span>
+                    <span className="post-author">By {post.author_id}</span>
                   </div>
                 </article>
               ))}
@@ -108,6 +111,7 @@ const PublicBlog: React.FC = () => {
           )}
         </main>
       </div>
+    </div>
     </div>
   );
 };
