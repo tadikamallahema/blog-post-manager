@@ -21,7 +21,7 @@ const Signup = () => {
         email,
         phoneNumber,
         password,
-        role: "user",
+        role: "admin",
       });
       setMessage(res.data.message);
       if (res.data.success) {
@@ -29,7 +29,7 @@ const Signup = () => {
         setEmail("");
         setPhoneNumber("");
         setPassword("");
-        setTimeout(() => navigate("/"), 1000);
+        setTimeout(() => navigate("/login"), 1000);
       }
     } catch (err: any) {
       setMessage(err.response?.data?.message || "Signup failed");

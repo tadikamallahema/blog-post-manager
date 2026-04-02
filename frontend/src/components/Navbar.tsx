@@ -11,13 +11,13 @@ const Navbar: React.FC = () => {
   const handleLogout = async () => {
     try {
       await API.post("/auth/logout");
-      navigate("/");
+      navigate("/login");
     } catch (err) {
       console.error("Logout error:", err);
     } finally {
-      // logout() will clear both state and localStorage
-      logout();
-      navigate("/");
+       logout() //will clear both state and localStorage
+      
+      navigate("/login");
     }
   };
 

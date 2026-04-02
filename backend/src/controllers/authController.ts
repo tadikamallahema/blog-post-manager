@@ -10,7 +10,7 @@ dotenv.config();
 
 export const registerUser=async(req:Request,res:Response)=>{
     try{
-        const {name,email,phoneNumber,password,role,is_active="true"}=req.body;
+        const {name,email,phoneNumber,password,role,is_active=true}=req.body;
         if(!name||!email||!phoneNumber|| !password){
             return res.status(400).json({success:false,message:"Few details are missing"});
         }
@@ -24,6 +24,8 @@ export const registerUser=async(req:Request,res:Response)=>{
         })
         return res.status(201).json({success:true,message:"User Signedup successfully",user})
     }catch(err:any){
+        console.log(err);
+
         return res.status(500).json({success:false,message:err.message});
     }
 }
