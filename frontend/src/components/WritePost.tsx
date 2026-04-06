@@ -36,7 +36,7 @@ const WritePost: React.FC = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await API.get("/blog/allc");
+      //const res = await API.get("/blog/allc");
       setCategories(/* res.data.formatted || */ ["Tech", "Health", "Business","Sport","News"]);
     } catch (err) {
       setCategories(["Tech", "Health", "Business","Sport","News"]);
