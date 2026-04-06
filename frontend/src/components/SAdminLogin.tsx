@@ -1,38 +1,38 @@
 import React, { useState } from "react";
 import API from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "../styles/Auth.css";
 
-const Signup = () => {
-  const [name, setName] = useState("");
+const SAdminLogin = () => {
   const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { setAuth } = useAuth();
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await API.post("/auth/register", {
-        name,
-        email,
-        phoneNumber,
-        password,
-        role: "admin",
-      });
-      setMessage(res.data.message);
-      if (res.data.success) {
-        setName("");
+      const res = await API.post("/sadmin/login", { email, password });
+      console.log(res.data);
+      if (res.data.success /* && res.data.token */ && res.data.user) {
+
+        setAuth(res.data.token, res.data.data);
+        setMessage("");
         setEmail("");
-        setPhoneNumber("");
         setPassword("");
-        setTimeout(() => navigate("/login"), 1000);
+        navigate('/superadmin');
+      } else {
+        navigate('/slogin');
+        setMessage(res.data.message || "Login failed");
       }
     } catch (err: any) {
-      setMessage(err.response?.data?.message || "Signup failed");
+      console.error("Login error:", err);
+      setMessage(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -44,22 +44,10 @@ const Signup = () => {
         <div className="auth-box">
           <div className="auth-header">
             <h1>📝 BlogManager</h1>
-            <p>Create Account</p>
+            <p>Super Admin Login</p>
           </div>
 
           <form onSubmit={handleSubmit} className="auth-form">
-            <div className="form-group">
-              <label htmlFor="name">Full Name</label>
-              <input
-                id="name"
-                type="text"
-                placeholder="Enter your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </div>
-
             <div className="form-group">
               <label htmlFor="email">Email Address</label>
               <input
@@ -73,45 +61,31 @@ const Signup = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="phone">Phone Number</label>
-              <input
-                id="phone"
-                type="tel"
-                placeholder="Enter your phone"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="form-group">
               <label htmlFor="password">Password</label>
               <input
                 id="password"
                 type="password"
-                placeholder="Create a password"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
 
-            {message && <div className={`message ${message.includes("successfully") ? "success" : "error"}`}>
+            {message && <div className={`message ${message.includes("Login") || message.includes("Successful") ? "success" : "error"}`}>
               {message}
             </div>}
 
             <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? "Creating..." : "Create Account"}
+              {loading ? "Logging in..." : "Login"}
             </button>
           </form>
 
-          <div className="auth-footer">
-            <p>Already have an account? <Link to="/login">Log in</Link></p>
-          </div>
+          
         </div>
       </div>
     </div>
   );
 };
 
-export default Signup;
+export default SAdminLogin;

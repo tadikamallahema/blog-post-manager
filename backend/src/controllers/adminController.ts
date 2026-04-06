@@ -81,3 +81,4 @@ export const toggleStatusOfAdmin=async(req:Request,res:Response)=>{
   }
 
 }
+

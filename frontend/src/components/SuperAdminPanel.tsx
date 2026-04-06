@@ -77,7 +77,6 @@ const SuperAdminPanel: React.FC = () => {
   }; */
   const handleToggleStatus = async (id: number) => {
   try {
-    // 🔥 update UI instantly
     setAdmins((prev) =>
       prev.map((admin) =>
         admin.id === id
@@ -109,7 +108,7 @@ const SuperAdminPanel: React.FC = () => {
 
   return (
     <div className="superadmin-page">
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="superadmin-container">
         <div className="superadmin-header">
           <h1>👥 Manage Admin Accounts</h1>

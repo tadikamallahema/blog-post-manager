@@ -9,6 +9,7 @@ import WritePost from "./components/WritePost";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoutes from "./context/ProtectedRoutes";
 import Blogpage from "./components/Blogpage";
+import SAdminLogin from "./components/SAdminLogin";
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/" element={<PublicBlog />} />
-
+          <Route path="/slogin" element={<SAdminLogin/>}/>
           {/* <Route
             path="/dashboard"
             element={
@@ -46,7 +47,11 @@ function App() {
           />
           <Route
             path="/superadmin"
-            element={<SuperAdminPanel />}
+            element={
+              <ProtectedRoutes allowedRoles={["super_admin"]}>
+            <SuperAdminPanel />
+            </ProtectedRoutes>
+          }
           />
 
           <Route

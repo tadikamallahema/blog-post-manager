@@ -98,3 +98,10 @@ export const toggleUser=async(id:number):Promise<ResultSetHeader>=>{
   )
   return res;
 } */
+
+export const getSAdminByEmail=async(email:string):Promise<RowDataPacket|null>=>{
+    const [res]=await db.execute<RowDataPacket[]>(
+        `select * from users where email=? and role='super_admin'`,[email]
+    )
+    return res.length?res[0]:null;
+}   

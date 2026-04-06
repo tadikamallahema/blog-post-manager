@@ -1,6 +1,6 @@
 import { Request,Response } from "express";
 import User from '../types/user';
-import { getUserByEmail, insertUser } from "../servicer/user.servicer";
+import { getSAdminByEmail, getUserByEmail, insertUser } from "../servicer/user.servicer";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -67,6 +67,42 @@ export async function login(req:Request,res:Response){
     }
 }
 
+export async function superAdminLogin(req:Request,res:Response){
+    try{
+        const {email,password}:User=req.body;
+        if(!email|| !password){
+          return res.status(400).json({success:false,message:"Few details are missing"});
+        }
+        const existingUser=await getSAdminByEmail(email);
+        if(!existingUser){
+            return res.status(404).json({success:false,message:"User doesn'tt exists"});
+        }
+        const passwordmatch=await bcrypt.compare(password,existingUser.password);
+        if(!passwordmatch){
+             return res.status(400).json({ message: "Wrong password" });
+        }
+        const token=jwt.sign({id:existingUser.id,role:existingUser.role},process.env.JWT_SECRET!,{expiresIn:'15m'});
+        res.cookie("token",token,{
+            httpOnly:true,
+            secure:false,
+            sameSite:"lax",
+            maxAge:15*60*1000       //15 min
+        })
+        
+        const refreshToken=jwt.sign({id:existingUser.id,role:existingUser.role},process.env.JWT_SECRET_REFRESH!,{expiresIn:'1d'});
+        res.cookie("refreshToken",refreshToken,{
+            httpOnly:true,
+            secure:false,
+            sameSite:"lax",
+            maxAge:24*60*60*1000    //1 day
+        })
+        return res.status(200).json({success:true,message:"User Logged in Successfull",user:{name:existingUser.name,
+            email:existingUser.email,phoneNumber:existingUser.phoneNumber,role:existingUser.role,is_active:existingUser.is_active
+        }})
+    }catch(err:any){
+        return res.status(500).json({success:false,message:err.message});
+    }
+}
 export async function logout(req:Request,res:Response){
     try{
         res.clearCookie("token",{
