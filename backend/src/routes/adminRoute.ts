@@ -9,5 +9,5 @@ sadminRoute.get('/all',getAdmins);
 sadminRoute.post('/login',superAdminLogin)
 sadminRoute.post('/update/:id',updateAdminByS);
 sadminRoute.delete('/del/:id',deleteAdminByS);
-sadminRoute.put('/toggle/:id',toggleStatusOfAdmin)
+sadminRoute.put('/toggle/:id',toggleStatusOfAdmin);
 export default sadminRoute; 

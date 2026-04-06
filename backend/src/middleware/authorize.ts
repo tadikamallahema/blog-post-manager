@@ -3,10 +3,10 @@ import { Role } from "../types/role";
 
 export const authorize = (...allowedroles: Role[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    if (!req.user) {
+    if (!(req as any).user) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
-    if (!allowedroles.includes(req.user.role)) {
+    if (!allowedroles.includes((req as any).user.role)) {
       return res.status(403).json({
         success: false,
         message: "Your are not authorized to access this page",

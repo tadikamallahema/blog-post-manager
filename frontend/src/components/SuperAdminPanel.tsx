@@ -65,31 +65,16 @@ const SuperAdminPanel: React.FC = () => {
     }
   };
 
-/*   const handleToggleStatus = async (id: number) => {
-    try {
-      await API.patch(`/sadmin/toggle/${id}`);
-      setMessage("Admin status toggled");
-      fetchAdmins();
-      setTimeout(() => setMessage(""), 3000);
-    } catch (err) {
-      setMessage("Error toggling status");
-    }
-  }; */
   const handleToggleStatus = async (id: number) => {
+    const prev=admins;
   try {
-    setAdmins((prev) =>
-      prev.map((admin) =>
-        admin.id === id
-          ? { ...admin, is_active: admin.is_active ? 0 : 1 }
-          : admin
-      )
-    );
-
+    setAdmins((p)=>
+      p.map((admin)=>
+      admin.id===id ?
+    {...admin,is_active:admin.is_active?0:1}:admin))
     await API.put(`/sadmin/toggle/${id}`);
-
-    setMessage("Admin status toggled");
-    setTimeout(() => setMessage(""), 3000);
   } catch (err) {
+    setAdmins(prev);
     setMessage("Error toggling status");
   }
 };

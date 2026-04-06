@@ -38,7 +38,7 @@ createBlogTable();
 app.use('/api/auth',authRoutes);
 app.use('/api/blog', postRoutes);
 app.use('/api/sadmin',sadminRoute);
-app.use('/api/refresh',refreshAccessToken);
+/* app.post('/api/refresh',refreshAccessToken); */
 app.listen(port,()=>{
     console.log(`Server is running on port: ${port}`);
 })

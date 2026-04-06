@@ -74,11 +74,13 @@ export const toggleStatusOfAdmin=async(req:Request,res:Response)=>{
   try{
     const {id}=req.params;
     const superAdminId=Number(id);
-      await toggleUser(superAdminId);
+    if (!id || isNaN(superAdminId)) {
+    return res.status(400).json({success: false,message: "Invalid admin ID"});
+    }
+   const result= await toggleUser(superAdminId);
+   if(result.affectedRows===0) return res.status(404).json({success:false,message:"Admin not found "})
     return res.status(200).json({success:true,message:"Updated Admin Status"})
   }catch(err:any){
     return res.status(500).json({success:false,message:err.message});
   }
-
 }
-

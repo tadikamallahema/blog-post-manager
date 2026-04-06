@@ -77,7 +77,7 @@ export const deleteAdmin=async(id:number):Promise<ResultSetHeader>=>{
 
 export const getUserByEmail=async(email:string):Promise<RowDataPacket|null>=>{
     const [res]=await db.execute<RowDataPacket[]>(
-        `select * from users where email=?`,[email]
+        `select * from users where email=? and is_active=true`,[email]
     )
     return res.length?res[0]:null;
 }   

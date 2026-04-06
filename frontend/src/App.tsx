@@ -39,11 +39,18 @@ function App() {
           />
           <Route
             path="/write"
-            element={<WritePost />}
+            element={
+            <ProtectedRoutes allowedRoles={["admin"]}>
+               <WritePost />
+            </ProtectedRoutes>
+          }
           />
           <Route
             path="/edit/:id"
-            element={<WritePost />}
+            element={
+            <ProtectedRoutes allowedRoles={["admin"]}>
+              <WritePost />
+            </ProtectedRoutes>}
           />
           <Route
             path="/superadmin"
