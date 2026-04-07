@@ -1,3 +1,4 @@
+import { ZodSchema } from "zod";
 import {  Response, NextFunction, Request } from "express";
 import jwt from "jsonwebtoken";
 import { getUserById } from "../servicer/user.servicer";
@@ -50,3 +51,26 @@ export const refreshAccessToken=(req: Request,res:Response,)=>{
     return res.status(403).json({success: false,message: "Invalid refresh token"});
   }
 }
+
+//Validates the req.body  and Validate and sanitize request body before controller
+export const validateZod =(schema: ZodSchema) =>
+  (req: Request, res: Response, next: NextFunction) => {
+    try {
+      req.body = schema.parse(req.body);
+      next();
+    } catch (err: any) {
+      return res.status(400).json({success: false,message: err.errors,});
+    }
+  };
+// To validate input from params , we use validate params
+export const validateParams =(schema: ZodSchema) =>
+  (req: Request, res: Response, next: NextFunction) => {
+    try {
+     const parsed = schema.parse(req.params);
+    (req as any).validatedParams = parsed;
+    //console.log("done");
+      next();
+    } catch (err: any) {
+      return res.status(400).json({success: false,message: err.errors,});
+    }
+};

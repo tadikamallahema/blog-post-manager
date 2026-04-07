@@ -11,9 +11,10 @@ dotenv.config();
 export const registerUser=async(req:Request,res:Response)=>{
     try{
         const {name,email,phoneNumber,password,role,is_active=true}=req.body;
-        if(!name||!email||!phoneNumber|| !password){
+        console.log(name,email,phoneNumber,password,role);
+         if(!name||!email||!phoneNumber|| !password){
             return res.status(400).json({success:false,message:"Few details are missing"});
-        }
+        } 
         const existingUser=await getUserByEmail(email);
         if(existingUser){
             return res.status(409).json({success:false,message:"User already exists"});
@@ -38,7 +39,7 @@ export async function login(req:Request,res:Response){
         }
         const existingUser=await getUserByEmail(email);
         if(!existingUser){
-            return res.status(404).json({success:false,message:"User doesn'tt exists"});
+            return res.status(404).json({success:false,message:"User doesn't exists"});
         }
         const passwordmatch=await bcrypt.compare(password,existingUser.password);
         if(!passwordmatch){
@@ -75,7 +76,7 @@ export async function superAdminLogin(req:Request,res:Response){
         }
         const existingUser=await getSAdminByEmail(email);
         if(!existingUser){
-            return res.status(404).json({success:false,message:"User doesn'tt exists"});
+            return res.status(404).json({success:false,message:"User doesn't exists"});
         }
         const passwordmatch=await bcrypt.compare(password,existingUser.password);
         if(!passwordmatch){
