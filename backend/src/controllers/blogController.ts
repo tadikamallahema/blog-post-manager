@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Blog from '../types/blog';
-import { allBlogs, deleteBlog, getAllCat, getBlogByCategory, getPostById, getPublishedBlogs, insertBlog, toggleStatus, updatePost } from "../servicer/blog.servicer";
+import { allBlogs, deleteBlog, getAllCat, getBlogByCategory, getPostById, getPublishedBlogs, getPublishedBlogsCount, insertBlog, toggleStatus, updatePost } from "../servicer/blog.servicer";
 
 export const createPost=async(req:Request,res:Response)=>{
     try{
@@ -17,9 +17,19 @@ export const createPost=async(req:Request,res:Response)=>{
     }
 }
 export const getAllPublishedPosts=async(req:Request,res:Response)=>{
+    //Pagination
+    const page:number=parseInt(req.query.page as string)||1;
+    const limit:number=parseInt(req.query.limit as string)||2;
+    if (page <= 0 || limit <= 0) {
+    return res.status(400).json({success: false,message: "Page and limit must be positive numbers"});
+  }
+    const offset:number=(page-1)*limit;
     try{
-        const posts=await getPublishedBlogs();
-        return res.status(200).json({success:true,message:"All published posts are ",posts})
+        const posts=await getPublishedBlogs(limit,offset);
+        const totalPosts = await getPublishedBlogsCount();
+        const totalPages:number = Math.ceil(totalPosts / limit);
+
+        return res.status(200).json({success:true,message:"All published posts are ",cuurentPage:page,totalPages,totalPosts,posts})
     }catch(err:any){
         return res.status(500).json({success:false,message:err.message});
     }

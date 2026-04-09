@@ -26,12 +26,21 @@ export async function getBlogsByAuthorId(author_id:number):Promise<RowDataPacket
     )
     return res;
 }
-export async function getPublishedBlogs():Promise<RowDataPacket[]>{
+export async function getPublishedBlogs(limit:number,offset:number):Promise<RowDataPacket[]>{
+    //console.log(limit,offset);
     const [res]=await db.execute<RowDataPacket[]>(
-        `select * from blogs where status="published" order by updated_at asc`
+        `select * from blogs where status="published" order by updated_at asc
+        limit ${limit} offset ${offset}`/* ,[offset,limit] */
     )
     return res;
 }
+export const getPublishedBlogsCount = async (): Promise<number> => {
+  const [rows]: any = await db.execute(
+    `SELECT COUNT(*) as total FROM blogs WHERE status = "published"`
+  );
+
+  return rows[0].total;
+};
 export async function allBlogs():Promise<RowDataPacket[]>{
     const [res]=await db.execute<RowDataPacket[]>(
         `select * from blogs`
