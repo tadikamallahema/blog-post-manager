@@ -29,7 +29,7 @@ const Signup = () => {
         setEmail("");
         setPhoneNumber("");
         setPassword("");
-        setTimeout(() => navigate("/login"), 1000);
+        setTimeout(() => navigate("/login",{ replace: true }), 1000);
       }
     } catch (err: any) {
       setMessage(err.response?.data?.message || "Signup failed");

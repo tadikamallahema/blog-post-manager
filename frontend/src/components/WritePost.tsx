@@ -77,18 +77,17 @@ const WritePost: React.FC = () => {
         await API.put(`/blog/${id}`, {
           title: form.title,
           content: form.content,
-          author_id:user?.id,
+          author_id: Number(user?.id),
           category: form.category,
           status: form.status,
         });
         setMessage("Post updated successfully");
       } else {
-        console.log(user?.id,"hhh")
-         
+        //console.log(typeof(user?.id),"hhh")
         await API.post("/blog/create", {
           title: form.title,
           content: form.content,
-          author_id:user?.id,
+          author_id: Number(user?.id),
           category: form.category,
           status: form.status,
         });

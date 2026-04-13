@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Blog from '../types/blog';
-import { allBlogs, deleteBlog, getAllCat, getBlogByCategory, getPostById, getPublishedBlogs, getPublishedBlogsCount, insertBlog, toggleStatus, updatePost } from "../servicer/blog.servicer";
+import { allBlogs, deleteBlog, getAllCat, getBlogByCategory, getBlogsByAuthorId, getPostById, getPublishedBlogs, getPublishedBlogsCount, insertBlog, toggleStatus, updatePost } from "../servicer/blog.servicer";
 
 export const createPost=async(req:Request,res:Response)=>{
     try{
@@ -127,4 +127,18 @@ export async function getAllCategories(req:Request,res:Response){
     }catch(err:any){
         return res.status(500).json({success:false,message:err.message});
     }
+}
+
+export async function getAllPostsByAuthor(req:Request,res:Response){
+    try{
+     const {id}=req.params;
+     if(!id){
+        return res.status(404).json({success:false,message:"No Id is found"})
+     }
+     const aut_id=Number(id);
+     const post=await getBlogsByAuthorId(aut_id);
+     return res.status(200).json({success:true,message:`Post of Id ${id} are`,post});
+   }catch(err:any){
+    return res.status(500).json({success:false,message:err.message});
+   }
 }

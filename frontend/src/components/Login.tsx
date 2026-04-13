@@ -25,7 +25,7 @@ const Login = () => {
         setMessage("");
         setEmail("");
         setPassword("");
-        navigate('/admin');
+        navigate('/admin',{ replace: true });
       } else {
         setMessage(res.data.message || "Login failed");
       }

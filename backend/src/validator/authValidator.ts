@@ -57,10 +57,10 @@ export const idParamSchema = z.object({
 export const blogSchema = z.object({
   title: z.string().min(3).max(200).trim(),
   content: z.string().min(10).max(5000),
-  category: z.string().min(3).max(100).trim().toLowerCase(),
-  status: z.enum(["draft", "published"]).optional(),
+  category: z.string().min(3).max(100).transform(val => val.trim().toLowerCase()),
+  status: z.enum(["draft", "published"]),
   image: z.string().url().optional(),
-}).strict();
+})
 
 export const updateBlogSchema = blogSchema.partial().strict();
 

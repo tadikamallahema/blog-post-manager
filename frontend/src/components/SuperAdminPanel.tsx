@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import API from "../services/api";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 //import Navbar from "./Navbar";
 import "../styles/SuperAdminPanel.css";
 
@@ -24,14 +26,27 @@ const SuperAdminPanel: React.FC = () => {
     password: "",
   });
 
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
   useEffect(() => {
     fetchAdmins();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      await API.post("/auth/logout");
+    } catch (err) {
+      console.error("Logout error:", err);
+    } finally {
+      logout();
+      navigate("/login", { replace: true });
+    }
+  };
+
   const fetchAdmins = async () => {
     try {
       const res = await API.get("/sadmin/all");
-      //console.log(res.data.all);
       setAdmins(res.data.all || []);
     } catch (err) {
       console.error("Error fetching admins:", err);
@@ -66,18 +81,21 @@ const SuperAdminPanel: React.FC = () => {
   };
 
   const handleToggleStatus = async (id: number) => {
-    const prev=admins;
-  try {
-    setAdmins((p)=>
-      p.map((admin)=>
-      admin.id===id ?
-    {...admin,is_active:admin.is_active?0:1}:admin))
-    await API.put(`/sadmin/toggle/${id}`);
-  } catch (err) {
-    setAdmins(prev);
-    setMessage("Error toggling status");
-  }
-};
+    const prev = admins;
+    try {
+      setAdmins((p) =>
+        p.map((admin) =>
+          admin.id === id
+            ? { ...admin, is_active: admin.is_active ? 0 : 1 }
+            : admin
+        )
+      );
+      await API.put(`/sadmin/toggle/${id}`);
+    } catch (err) {
+      setAdmins(prev);
+      setMessage("Error toggling status");
+    }
+  };
 
   const handleDeleteAdmin = async (id: number) => {
     if (!window.confirm("Are you sure you want to delete this admin?")) return;
@@ -93,7 +111,12 @@ const SuperAdminPanel: React.FC = () => {
 
   return (
     <div className="superadmin-page">
-      {/* <Navbar /> */}
+      <div style={{ display: "flex", justifyContent: "flex-end", padding: "10px" }}>
+        <button onClick={handleLogout} className="btn btn-logout">
+          Logout
+        </button>
+      </div>
+
       <div className="superadmin-container">
         <div className="superadmin-header">
           <h1>👥 Manage Admin Accounts</h1>
@@ -117,7 +140,9 @@ const SuperAdminPanel: React.FC = () => {
                   type="text"
                   placeholder="Enter admin name"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                 />
               </div>
               <div className="form-group">
@@ -126,7 +151,9 @@ const SuperAdminPanel: React.FC = () => {
                   type="email"
                   placeholder="Enter email"
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                 />
               </div>
               <div className="form-group">
@@ -135,7 +162,12 @@ const SuperAdminPanel: React.FC = () => {
                   type="tel"
                   placeholder="Enter phone number"
                   value={formData.phoneNumber}
-                  onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      phoneNumber: e.target.value,
+                    })
+                  }
                 />
               </div>
               <div className="form-group">
@@ -144,7 +176,12 @@ const SuperAdminPanel: React.FC = () => {
                   type="password"
                   placeholder="Enter password"
                   value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      password: e.target.value,
+                    })
+                  }
                 />
               </div>
               <button type="submit" className="btn btn-primary">
@@ -166,14 +203,24 @@ const SuperAdminPanel: React.FC = () => {
               <div key={admin.id} className="admin-card">
                 <div className="admin-header-card">
                   <h3>{admin.name}</h3>
-                  <span className={`status-badge ${admin.is_active ? "active" : "inactive"}`}>
+                  <span
+                    className={`status-badge ${
+                      admin.is_active ? "active" : "inactive"
+                    }`}
+                  >
                     {admin.is_active ? "🟢 Active" : "🔴 Inactive"}
                   </span>
                 </div>
                 <div className="admin-details">
-                  <p><strong>Email:</strong> {admin.email}</p>
-                  <p><strong>Phone:</strong> {admin.phoneNumber}</p>
-                  <p><strong>Role:</strong> Admin</p>
+                  <p>
+                    <strong>Email:</strong> {admin.email}
+                  </p>
+                  <p>
+                    <strong>Phone:</strong> {admin.phoneNumber}
+                  </p>
+                  <p>
+                    <strong>Role:</strong> Admin
+                  </p>
                 </div>
                 <div className="admin-actions">
                   <button

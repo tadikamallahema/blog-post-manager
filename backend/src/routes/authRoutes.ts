@@ -6,7 +6,7 @@ import { loginUserSchema, registerUserSchema } from '../validator/authValidator'
 
 const authRoutes=express.Router();
 
-authRoutes.post('/register',validateZod(registerUserSchema),verifyToken,authorize("super_admin"),registerUser);
+authRoutes.post('/register',validateZod(registerUserSchema),registerUser);
 authRoutes.post('/login',validateZod(loginUserSchema),login);
 authRoutes.post('/logout',logout);
 authRoutes.post('/refresh', refreshAccessToken);

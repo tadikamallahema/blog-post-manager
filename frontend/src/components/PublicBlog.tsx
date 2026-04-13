@@ -1,8 +1,7 @@
- import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import API from "../services/api";
 import "../styles/PublicBlog.css";
-import { useNavigate } from "react-router-dom";
-import Navbar from "./Navbar";
+import { Link, useNavigate } from "react-router-dom";
 
 interface BlogPost {
   id: number;
@@ -71,7 +70,34 @@ const fetchPosts = async () => {
 
   return (
     <div>
-      <Navbar/>
+      <nav className="navbar">
+      <div className="navbar-container">
+        <Link to="/" className="navbar-brand">
+          📝 BlogManager
+        </Link>
+
+        <div className="navbar-menu">
+          <div className="nav-right">
+            
+            {/* Guest Mode (normal link) */}
+            <Link to="/blog" className="nav-link">
+              Continue as Guest
+            </Link>
+
+            {/* Admin Login (button) */}
+            <button
+              onClick={() => navigate("/login")}
+              className="btn btn-primary"
+            >
+              Admin Login
+            </button>
+
+          </div>
+        </div>
+      </div>
+    </nav>
+      <div>
+      
     <div className="public-blog-page">
       <header className="blog-header">
         <div className="blog-header-content">
@@ -101,6 +127,7 @@ const fetchPosts = async () => {
             ))}
           </div>
         </aside>
+        
 
         <main className="blog-main">
           {loading ? (
@@ -131,10 +158,7 @@ const fetchPosts = async () => {
               ))}
             </div>
           )}
-        </main>
-      </div>
-    </div>
-    {/* Pagination */}
+          {/* Pagination */}
           <div
             style={{
               marginTop: "40px",
@@ -147,7 +171,13 @@ const fetchPosts = async () => {
             <button
               disabled={page === 1}
               onClick={() => setPage(page - 1)}
-              style={{ padding: "8px 15px" }}
+              style={{
+    padding: "8px 15px",
+    backgroundColor: "#667cdb",
+    color: "white",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer"}}
             >
               Prev
             </button>
@@ -159,11 +189,23 @@ const fetchPosts = async () => {
             <button
               disabled={page === totalPages}
               onClick={() => setPage(page + 1)}
-              style={{ padding: "8px 15px" }}
+              style={{
+    padding: "8px 15px",
+    backgroundColor: "#667cdb",
+    color: "white",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer"}}
             >
               Next
             </button>
           </div>
+        </main>
+      </div>
+      
+    </div>
+    
+    </div>
     </div>
   );
 };

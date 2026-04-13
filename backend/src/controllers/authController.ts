@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
+
 dotenv.config();
 //console.log(process.env.JWT_SECRET_REFRESH);
 
@@ -122,3 +123,10 @@ export async function logout(req:Request,res:Response){
     }
 }
 
+/* export async function forgetPassword(req:Request,res:Response){
+    try{
+
+    }catch(err:any){
+        return res.status(500).json({success:false,message:err.message});
+    }
+} */
