@@ -5,7 +5,15 @@ import { allBlogs, deleteBlog, getAllCat, getBlogByCategory, getBlogsByAuthorId,
 export const createPost=async(req:Request,res:Response)=>{
     try{
         const {title,content,category,status,image="null"}:Blog=req.body;
-        const author_id = (req as any).user?.id;
+        //const author_id = (req as any).user?.id;
+        if (!(req as any).user?.id) {
+    return res.status(401).json({
+        success: false,
+        message: "Unauthorized"
+    });
+}
+
+const author_id = (req as any).user.id;
         if(!title || !content || !category||!status){
             return res.status(400).json({success:false,message:"All details are required"})
         }
@@ -100,7 +108,7 @@ export async function togglePostStatus(req:Request,res:Response){
    }
 }
 
-export async function getPostsByCategory(req:Request,res:Response){
+/* export async function getPostsByCategory(req:Request,res:Response){
     try{
         const {category}=req.query;
         if(!category){
@@ -116,8 +124,45 @@ export async function getPostsByCategory(req:Request,res:Response){
     }catch(err:any){
         return res.status(500).json({success:false,message:err.message});
     }
-}
+} */
 
+export const getPostsByCategory = async (req: Request, res: Response) => {
+  try {
+    const categoryQuery = req.query.category;
+
+    // Validate query param properly
+    if (typeof categoryQuery !== "string" || !categoryQuery.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Category must be a valid non-empty string",
+      });
+    }
+
+    const category = categoryQuery.trim().toLowerCase();
+
+    const posts = await getBlogByCategory(category);
+
+    if (posts.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: `No posts found for category: ${category}`,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: `Posts of category: ${category}`,
+      count: posts.length, // ✅ useful addition
+      posts,
+    });
+
+  } catch (err: unknown) {
+    return res.status(500).json({
+      success: false,
+      message: err instanceof Error ? err.message : "Internal Server Error",
+    });
+  }
+};
 export async function getAllCategories(req:Request,res:Response){
     try{
        const categories= await getAllCat();

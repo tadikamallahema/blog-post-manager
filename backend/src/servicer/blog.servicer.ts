@@ -20,18 +20,55 @@ export async function insertBlog(data:createBlog):Promise<ResultSetHeader>{
     );
     return res;
 }
-export async function getBlogsByAuthorId(author_id:number):Promise<RowDataPacket[] >{
+/* export async function getBlogsByAuthorId(author_id:number):Promise<RowDataPacket[] >{
     const [res]=await db.execute<RowDataPacket[]>(
         `select * from blogs where author_id=?`,[author_id]
     )
     return res;
+} */
+export async function getBlogsByAuthorId(author_id: number): Promise<RowDataPacket[]> {
+    const [res] = await db.execute<RowDataPacket[]>(
+        `SELECT 
+            b.id,
+            b.title,
+            b.content,
+            b.category,
+            b.status,
+            b.created_at,
+            b.updated_at,
+            u.name AS author
+         FROM blogs b
+         LEFT JOIN users u ON b.author_id = u.id
+         WHERE b.author_id = ?`,
+        [author_id]
+    );
+    return res;
 }
-export async function getPublishedBlogs(limit:number,offset:number):Promise<RowDataPacket[]>{
+/* export async function getPublishedBlogs(limit:number,offset:number):Promise<RowDataPacket[]>{
     //console.log(limit,offset);
     const [res]=await db.execute<RowDataPacket[]>(
         `select * from blogs where status="published" order by updated_at asc
-        limit ${limit} offset ${offset}`/* ,[offset,limit] */
+        limit ${limit} offset ${offset}`/* ,[offset,limit] 
     )
+    return res;
+} */
+export async function getPublishedBlogs(limit: number, offset: number): Promise<RowDataPacket[]> {
+    const [res] = await db.execute<RowDataPacket[]>(
+        `SELECT 
+            b.id,
+            b.title,
+            b.content,
+            b.category,
+            b.status,
+            b.created_at,
+            b.updated_at,
+            u.name AS author
+         FROM blogs b
+         LEFT JOIN users u ON b.author_id = u.id
+         WHERE b.status = "published"
+         ORDER BY b.updated_at ASC
+         LIMIT ${limit} OFFSET ${offset}`
+    );
     return res;
 }
 export const getPublishedBlogsCount = async (): Promise<number> => {
@@ -41,17 +78,52 @@ export const getPublishedBlogsCount = async (): Promise<number> => {
 
   return rows[0].total;
 };
-export async function allBlogs():Promise<RowDataPacket[]>{
+/* export async function allBlogs():Promise<RowDataPacket[]>{
     const [res]=await db.execute<RowDataPacket[]>(
         `select * from blogs`
     )
     return res;
+} */
+export async function allBlogs(): Promise<RowDataPacket[]> {
+    const [res] = await db.execute<RowDataPacket[]>(
+        `SELECT 
+            b.id,
+            b.title,
+            b.content,
+            b.category,
+            b.status,
+            b.created_at,
+            b.updated_at,
+            u.name AS author
+         FROM blogs b
+         LEFT JOIN users u ON b.author_id = u.id
+         ORDER BY b.updated_at DESC`
+    );
+    return res;
 }
-export async function getPostById(id:number):Promise<RowDataPacket|null>{
+/* export async function getPostById(id:number):Promise<RowDataPacket|null>{
     const [res]=await db.execute<RowDataPacket[]>(
         `select * from blogs where id=?`,[id]
     )
     return res.length?res[0]:null;
+} */
+export async function getPostById(id: number): Promise<RowDataPacket | null> {
+    const [res] = await db.execute<RowDataPacket[]>(
+        `SELECT 
+            b.id,
+            b.title,
+            b.content,
+            b.category,
+            b.status,
+            b.created_at,
+            b.updated_at,
+            u.name AS author
+         FROM blogs b
+         LEFT JOIN users u ON b.author_id = u.id
+         WHERE b.id = ?`,
+        [id]
+    );
+    return res.length ? res[0] : null;
 }
 export async function toggleStatus(id:number):Promise<ResultSetHeader>{
     const [res]=await db.execute<ResultSetHeader>(
@@ -99,7 +171,7 @@ export async function updatePost(
   const [res] = await db.execute<ResultSetHeader>(query, values);
   return res;
 }
-export const getBlogByCategory=async(category:string):Promise<RowDataPacket[]>=>{
+/* export const getBlogByCategory=async(category:string):Promise<RowDataPacket[]>=>{
     const [res]=await db.execute<RowDataPacket[]>(
         `select b.id,
             b.title,
@@ -114,8 +186,28 @@ export const getBlogByCategory=async(category:string):Promise<RowDataPacket[]>=>
          JOIN users u ON b.author_id = u.id
          WHERE LOWER(b.category) = LOWER(?) 
            AND b.status = 'published'
+           
         
         `,[category]
+    );
+    return res;
+} */
+export const getBlogByCategory = async (category: string): Promise<RowDataPacket[]> => {
+    const [res] = await db.execute<RowDataPacket[]>(
+        `SELECT 
+            b.id,
+            b.title,
+            b.content,
+            b.category,
+            b.status,
+            b.created_at,
+            b.updated_at,
+            u.name AS author
+         FROM blogs b
+         LEFT JOIN users u ON b.author_id = u.id
+         WHERE LOWER(b.category) = LOWER(?) 
+           AND b.status = 'published'`,
+        [category]
     );
     return res;
 }
